@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tour Map · San Francisco in a Day</title>
+<meta name="theme-color" content="#b5442b">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ec; --card:#ffffff; --ink:#1f1b16; --muted:#6b6258; --line:#e6ded2; --chip:#f1ebe2;
+  --accent:#b5442b; --gf:#2f7d4f;
+  --walk:#b5442b; --ferry:#2563a8; --cable:#c78a12; --bus:#6a4c9c;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15130f; --card:#201d18; --ink:#f1ece4; --muted:#a79e92; --line:#35302a; --chip:#2a2620;
+    --accent:#e0714f; --gf:#5fbf86;
+    --walk:#ef7b57; --ferry:#5b9be0; --cable:#e8b13a; --bus:#a98be0;
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,sans-serif}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:linear-gradient(160deg,#b5442b,#d9822b);color:#fff}
+.bar h1{font-family:Fraunces,Georgia,serif;font-size:1.15rem;margin:0;line-height:1.2}
+.bar a{color:#fff;font-weight:600;font-size:.9rem;text-decoration:none;white-space:nowrap}
+body.embed .bar{display:none}
+#map{flex:1;min-height:0;background:var(--chip)}
+.panel{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 2px 10px rgba(0,0,0,.12);font:13px/1.4 Inter,system-ui,sans-serif}
+.legend summary{font-weight:600;cursor:pointer;list-style:none}
+.legend summary::-webkit-details-marker{display:none}
+.legend summary::after{content:" ▾";color:var(--muted)}
+.legend[open] summary{margin-bottom:6px}
+.legend .rows{display:grid;gap:5px}
+.legend .row{display:flex;align-items:center;gap:8px}
+.legend svg{flex:0 0 34px}
+.legend .key{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;color:#fff;margin:0 8px}
+.views{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.views button{flex:1;white-space:nowrap;font:600 12px Inter,system-ui,sans-serif;border:0;border-radius:999px;padding:6px 10px;background:var(--chip);color:var(--ink);cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.pin{display:grid;place-items:center;border-radius:50%;color:#fff;font:700 13px Inter,system-ui,sans-serif;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.pin.num{width:28px;height:28px;background:var(--accent)}
+.pin.sight{width:14px;height:14px;background:#fff;border:3px solid var(--accent)}
+.pin.food{width:22px;height:22px;background:var(--gf);font-size:9px;letter-spacing:.02em}
+.pin.food.safe{box-shadow:0 0 0 2px var(--gf),0 1px 4px rgba(0,0,0,.4)}
+.leaflet-popup-content-wrapper{background:var(--card);color:var(--ink);border-radius:12px}
+.leaflet-popup-tip{background:var(--card)}
+.leaflet-popup-content{margin:12px 14px;font:13px/1.45 Inter,system-ui,sans-serif}
+.leaflet-popup-content b{display:block;font-size:14px;margin-bottom:2px}
+.leaflet-popup-content .mode{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.leaflet-popup-content a{color:var(--accent);font-weight:600;text-decoration:none;margin-right:10px}
+.leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>San Francisco in a Day: tour map</h1>
+  <a href="index.html">‹ Back to the tour</a>
+</div>
+<div id="map" role="region" aria-label="Map of the walking tour route"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const embed = new URLSearchParams(location.search).has('embed');
+if (embed) document.body.classList.add('embed');
+const linkTarget = embed ? '_top' : '_self';
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+const MODES = {
+  walk:  {label:'Walk',             color:css('--walk'),  dash:null},
+  ferry: {label:'Ferry',            color:css('--ferry'), dash:'2 9'},
+  cable: {label:'Cable car',        color:css('--cable'), dash:'10 7'},
+  bus:   {label:'Muni bus (7 line)',color:css('--bus'),   dash:'10 7'}
+};
+
+// Route legs, in order. Coordinates are [lat, lng], traced along the streets the tour describes.
+const LEGS = [
+  {mode:'ferry', name:'Ferry: Jack London Square → Ferry Building', note:'About 25 minutes. Sit on the open back deck.', path:[
+    [37.7952,-122.2793],[37.7948,-122.2850],[37.7952,-122.2950],[37.7965,-122.3050],[37.7975,-122.3150],
+    [37.7980,-122.3250],[37.7990,-122.3400],[37.7995,-122.3600],[37.7980,-122.3800],[37.7962,-122.3910],[37.7956,-122.3932]]},
+  {mode:'walk', name:'Walk the Embarcadero to Pier 39', note:'About 2 miles. Or ride the F-line streetcar.', path:[
+    [37.7956,-122.3935],[37.7966,-122.3946],[37.7985,-122.3965],[37.7996,-122.3977],[37.8020,-122.4000],
+    [37.8035,-122.4017],[37.8050,-122.4030],[37.8065,-122.4045],[37.8070,-122.4055],[37.8077,-122.4068],[37.8085,-122.4093]]},
+  {mode:'walk', name:'Pier 39 → Fisherman\'s Wharf → Ghirardelli Square', path:[
+    [37.8085,-122.4093],[37.8083,-122.4118],[37.8081,-122.4137],[37.8079,-122.4155],[37.8090,-122.4158],
+    [37.8079,-122.4155],[37.8077,-122.4170],[37.8075,-122.4187],[37.8073,-122.4204],[37.8079,-122.4212],
+    [37.8073,-122.4204],[37.8066,-122.4203],[37.8064,-122.4219],[37.8059,-122.4226],[37.8064,-122.4219],[37.8066,-122.4205]]},
+  {mode:'cable', name:'Cable car: Powell–Hyde line', note:'Board at Hyde & Beach, ride over Russian Hill, hop off at Powell & Washington. $9 a ride.', path:[
+    [37.8066,-122.4205],[37.8040,-122.4200],[37.8010,-122.4194],[37.7980,-122.4188],[37.7955,-122.4183],[37.7940,-122.4180],
+    [37.7941,-122.4164],[37.7942,-122.4148],[37.7944,-122.4131],[37.7946,-122.4115],[37.7948,-122.4099]]},
+  {mode:'walk', name:'Walk Chinatown → North Beach', path:[
+    [37.7948,-122.4099],[37.7946,-122.4115],[37.7948,-122.4099],[37.7950,-122.4082],[37.7941,-122.4080],
+    [37.7942,-122.4072],[37.7951,-122.4071],[37.7957,-122.4071],[37.7951,-122.4071],[37.7952,-122.4065],
+    [37.7948,-122.4054],[37.7954,-122.4049],[37.7963,-122.4051],[37.7972,-122.4053],[37.7975,-122.4060],
+    [37.7977,-122.4066],[37.7980,-122.4070],[37.7987,-122.4074],[37.7989,-122.4080],[37.7995,-122.4085],
+    [37.8005,-122.4097],[37.8008,-122.4102]]},
+  {mode:'walk', name:'Walk down Kearny to Market Street', note:'About 15 minutes. Or take the T Third subway from Chinatown–Rose Pak.', path:[
+    [37.8008,-122.4102],[37.8005,-122.4097],[37.7995,-122.4085],[37.7989,-122.4080],[37.7980,-122.4070],
+    [37.7975,-122.4060],[37.7972,-122.4053],[37.7963,-122.4051],[37.7954,-122.4049],[37.7936,-122.4045],
+    [37.7918,-122.4041],[37.7899,-122.4037],[37.7880,-122.4032]]},
+  {mode:'bus', name:'Muni 7 Haight-Noriega, outbound', note:'Market Street to Haight & Masonic. Confirm the route the day of.', path:[
+    [37.7880,-122.4032],[37.7845,-122.4078],[37.7810,-122.4123],[37.7775,-122.4167],[37.7752,-122.4196],
+    [37.7728,-122.4224],[37.7726,-122.4239],[37.7720,-122.4289],[37.7714,-122.4338],[37.7710,-122.4370],
+    [37.7704,-122.4420],[37.7700,-122.4452]]},
+  {mode:'walk', name:'Walk the Haight', path:[
+    [37.7700,-122.4452],[37.7698,-122.4469],[37.7689,-122.4467],[37.7698,-122.4469],[37.7696,-122.4485],
+    [37.7694,-122.4501],[37.7692,-122.4518],[37.7691,-122.4528],[37.7692,-122.4518],[37.7694,-122.4501],
+    [37.7696,-122.4485],[37.7698,-122.4469],[37.7700,-122.4452],[37.7710,-122.4454],[37.7720,-122.4456]]},
+  {mode:'walk', name:'The Panhandle → Stoa → Alamo Square', note:'Skip Stoa by heading straight up Divisadero to Hayes.', path:[
+    [37.7720,-122.4456],[37.7723,-122.4457],[37.7726,-122.4432],[37.7729,-122.4408],[37.7734,-122.4409],
+    [37.7736,-122.4393],[37.7738,-122.4376],[37.7729,-122.4374],[37.7719,-122.4372],[37.7710,-122.4370],
+    [37.7712,-122.4354],[37.7714,-122.4338],[37.7723,-122.4340],[37.7733,-122.4342],[37.7742,-122.4344],
+    [37.7751,-122.4346],[37.7758,-122.4346],[37.7764,-122.4342],[37.7760,-122.4331]]},
+  {mode:'walk', name:'Painted Ladies → Hayes Valley', note:'About 10 minutes downhill on Hayes Street.', path:[
+    [37.7760,-122.4331],[37.7753,-122.4330],[37.7755,-122.4313],[37.7757,-122.4297],[37.7759,-122.4280],
+    [37.7761,-122.4264],[37.7763,-122.4247],[37.7759,-122.4246]]}
+];
+
+// Numbered stops match the numbered sections of the tour page.
+const STOPS = [
+  {n:1, at:[37.7952,-122.2793], name:'Oakland Ferry Terminal', note:'Jack London Square. Arrive 10–15 minutes early.', sec:'ferry'},
+  {n:2, at:[37.7956,-122.3935], name:'Ferry Building', note:'Mariposa Baking (100% gluten free) is inside.', sec:'embarcadero'},
+  {n:3, at:[37.8079,-122.4155], name:'Fisherman\'s Wharf', note:'Musée Mécanique, Fish Alley, Hyde Street Pier.', sec:'wharf'},
+  {n:4, at:[37.8066,-122.4205], name:'Cable car turnaround', note:'Hyde & Beach. Board the Powell–Hyde line.', sec:'chinatown'},
+  {n:5, at:[37.7698,-122.4469], name:'Haight & Ashbury', note:'Summer of Love central.', sec:'haight'},
+  {n:6, at:[37.7764,-122.4342], name:'Alamo Square', note:'The Painted Ladies line Steiner Street.', sec:'alamo'},
+  {n:7, at:[37.7759,-122.4246], name:'Hayes Valley', note:'Patricia\'s Green and dinner.', sec:'dinner'}
+];
+
+const SIGHTS = [
+  ['Levi\'s Plaza',[37.8027,-122.4022],'embarcadero'],
+  ['Pier 33: Alcatraz Landing',[37.8067,-122.4040],'embarcadero'],
+  ['Pier 39 and the sea lions',[37.8090,-122.4100],'embarcadero'],
+  ['Musée Mécanique',[37.8091,-122.4158],'wharf'],
+  ['Fish Alley',[37.8082,-122.4184],'wharf'],
+  ['Hyde Street Pier',[37.8082,-122.4213],'wharf'],
+  ['Ghirardelli Square',[37.8059,-122.4226],'wharf'],
+  ['Cable Car Museum',[37.7946,-122.4115],'chinatown'],
+  ['Waverly Place',[37.7945,-122.4071],'chinatown'],
+  ['Golden Gate Fortune Cookie Factory',[37.7957,-122.4071],'chinatown'],
+  ['Portsmouth Square',[37.7948,-122.4054],'chinatown'],
+  ['City Lights Bookstore',[37.7977,-122.4066],'chinatown'],
+  ['Caffe Trieste',[37.7987,-122.4074],'chinatown'],
+  ['Washington Square',[37.8008,-122.4102],'chinatown'],
+  ['710 Ashbury',[37.7689,-122.4467],'haight'],
+  ['Amoeba Music',[37.7691,-122.4528],'haight'],
+  ['The Panhandle',[37.7726,-122.4432],'alamo'],
+  ['Painted Ladies',[37.7760,-122.4329],'alamo']
+];
+
+const FOOD = [
+  ['Mariposa Baking',[37.7953,-122.3932],'100% gluten free','embarcadero',true],
+  ['Otherwise Brewing taproom',[37.7992,-122.4069],'100% gluten free','lunch',true],
+  ['Caffè Sport',[37.7997,-122.4080],'Celiac friendly','lunch',false],
+  ['China Live',[37.7978,-122.4077],'Dedicated GF menu','lunch',false],
+  ['Stoa',[37.7716,-122.4337],'100% gluten free','dinner',true],
+  ['Il Borgo',[37.7754,-122.4254],'Accommodating, GF fryer','dinner',false],
+  ['Patxi\'s Pizza',[37.7762,-122.4256],'GF crust, shared kitchen','dinner',false]
+];
+
+const map = L.map('map', {zoomControl:true, scrollWheelZoom:!embed, tap:true});
+L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'rastertiles/voyager'}/{z}/{x}/{y}{r}.png`, {
+  maxZoom:19, subdomains:'abcd',
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+}).addTo(map);
+
+const gmaps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q + ', San Francisco');
+const more = sec => `<a href="index.html#${sec}" target="${linkTarget}">Read in the tour ›</a>`;
+
+const routeLayer = L.featureGroup().addTo(map);
+for (const leg of LEGS) {
+  const m = MODES[leg.mode];
+  L.polyline(leg.path, {color:'#fff', weight:8, opacity:dark ? .25 : .85}).addTo(routeLayer);
+  L.polyline(leg.path, {color:m.color, weight:5, opacity:.95, dashArray:m.dash, lineCap:'round', lineJoin:'round'})
+    .bindPopup(`<span class="mode">${m.label}</span><b>${leg.name}</b>${leg.note || ''}`)
+    .addTo(routeLayer);
+}
+
+const icon = (cls, html, size) => L.divIcon({className:'', html:`<div class="pin ${cls}">${html}</div>`, iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-size/2]});
+
+for (const [name, at, sec] of SIGHTS)
+  L.marker(at, {icon:icon('sight','',14), title:name})
+    .bindPopup(`<b>${name}</b><a href="${gmaps(name)}" target="_blank" rel="noopener">Google Maps ›</a>${more(sec)}`).addTo(map);
+
+for (const [name, at, tag, sec, safe] of FOOD)
+  L.marker(at, {icon:icon('food' + (safe ? ' safe' : ''),'GF',22), title:name, zIndexOffset:500})
+    .bindPopup(`<span class="mode">${tag}</span><b>${name}</b><a href="${gmaps(name)}" target="_blank" rel="noopener">Google Maps ›</a>${more(sec)}`).addTo(map);
+
+for (const s of STOPS)
+  L.marker(s.at, {icon:icon('num', s.n, 28), title:s.name, zIndexOffset:1000})
+    .bindPopup(`<span class="mode">Stop ${s.n}</span><b>${s.name}</b>${s.note}<br>${more(s.sec)}`).addTo(map);
+
+// Legend and view switcher
+const legend = L.control({position:'topright'});
+legend.onAdd = () => {
+  const d = L.DomUtil.create('details', 'panel legend');
+  d.open = innerWidth >= 600;
+  const line = m => `<svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="${m.color}" stroke-width="5" stroke-linecap="round" ${m.dash ? `stroke-dasharray="${m.dash}"` : ''}/></svg>`;
+  d.innerHTML = '<summary>Map key</summary><div class="rows">' + Object.values(MODES).map(m => `<div class="row">${line(m)}${m.label}</div>`).join('') +
+    `<div class="row"><span class="key" style="background:var(--accent)">1</span>Tour stop</div>` +
+    `<div class="row"><span class="key" style="background:var(--gf);font-size:8px">GF</span>Gluten-free food</div>` +
+    `</div><div class="views"><button type="button" data-view="sf" aria-pressed="true">San Francisco</button><button type="button" data-view="all" aria-pressed="false">Whole trip</button></div>`;
+  L.DomEvent.disableClickPropagation(d);
+  d.querySelectorAll('button').forEach(b => b.onclick = () => {
+    d.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    fit(b.dataset.view);
+  });
+  return d;
+};
+legend.addTo(map);
+
+function fit(view) {
+  const bounds = view === 'all'
+    ? routeLayer.getBounds()
+    : L.latLngBounds(LEGS.slice(1).flatMap(l => l.path));
+  map.fitBounds(bounds, {padding:[24,24]});
+}
+fit('sf');
+</script>
+</body>
+</html>
