@@ -68,6 +68,12 @@ li{margin:6px 0}
 .eat .go{display:inline-block;margin-top:8px;font-weight:600;font-size:.9rem;text-decoration:none}
 footer{color:var(--muted);font-size:.85rem;padding:8px 0 40px}
 footer ul{padding-left:18px}
+.mapcard{padding:0;overflow:hidden}
+.mapcard iframe{display:block;width:100%;height:420px;border:0;background:var(--chip)}
+.mapcard .maplink{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;font-size:.9rem}
+.mapcard .maplink span{color:var(--muted)}
+.mapcard .maplink a{font-weight:600;text-decoration:none;white-space:nowrap}
+@media (max-width:520px){.mapcard iframe{height:360px}}
 .top{display:inline-block;margin-top:6px;font-size:.85rem;text-decoration:none;color:var(--muted)}
 </style>
 </head>
@@ -83,6 +89,7 @@ footer ul{padding-left:18px}
 
 <nav class="toc" aria-label="Tour stops">
   <div class="wrap">
+    <a href="#map">Map</a>
     <a href="#plan">Plan</a>
     <a href="#ferry">Ferry</a>
     <a href="#embarcadero">Embarcadero</a>
@@ -97,6 +104,11 @@ footer ul{padding-left:18px}
 </nav>
 
 <main class="wrap">
+
+<section id="map" class="mapcard" aria-label="Tour map">
+  <iframe src="map.html?embed" title="Map of the tour route: walking, ferry, cable car and bus legs with numbered stops" loading="lazy"></iframe>
+  <div class="maplink"><span>Solid lines are walking; dashed lines are ferry, cable car and bus.</span><a href="map.html">Full-screen map ›</a></div>
+</section>
 
 <section id="plan">
   <p>This is San Francisco the way it's meant to be met: arriving by water, the way generations of commuters, gold-seekers and dreamers have. In one long, happy day you'll cross the Bay, stroll the waterfront, clang up Russian Hill on a cable car, eat your way through Chinatown and North Beach, and then trade the tourist city for the neighborhoods where San Franciscans actually live. Wear comfortable shoes, bring a layer (or two), and keep your eyes up. This city rewards the curious.</p>
