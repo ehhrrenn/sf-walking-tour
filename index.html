@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>San Francisco in a Day</title>
+<meta name="description" content="A Rick Steves-style walking tour of San Francisco, from the Oakland ferry to dinner in Hayes Valley, with gluten-free meal picks.">
+<meta name="theme-color" content="#b5442b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ec; --card:#ffffff; --ink:#1f1b16; --muted:#6b6258; --line:#e6ded2;
+  --accent:#b5442b; --accent-ink:#ffffff; --gf:#2f7d4f; --gf-bg:#e6f3ea; --warn:#8a5a00; --warn-bg:#fbf0d9;
+  --chip:#f1ebe2;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15130f; --card:#201d18; --ink:#f1ece4; --muted:#a79e92; --line:#35302a;
+    --accent:#e0714f; --accent-ink:#1a0d08; --gf:#7fd19f; --gf-bg:#1d3326; --warn:#f0c46a; --warn-bg:#3a2e14;
+    --chip:#2a2620;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header.hero{background:linear-gradient(160deg,#b5442b,#d9822b);color:#fff;padding:40px 0 28px}
+.hero h1{font-family:Fraunces,Georgia,serif;font-size:2.1rem;line-height:1.15;margin:0 0 10px}
+.hero p{margin:0;opacity:.95}
+.kicker{text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;font-weight:600;opacity:.85;margin-bottom:8px}
+nav.toc{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.toc .wrap::-webkit-scrollbar{display:none}
+nav.toc a{flex:0 0 auto;text-decoration:none;color:var(--ink);background:var(--chip);border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:500;white-space:nowrap}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 18px;margin:16px 0}
+h2{font-family:Fraunces,Georgia,serif;font-size:1.4rem;line-height:1.25;margin:0 0 12px}
+h3{font-size:1rem;margin:18px 0 6px}
+.num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-family:Inter,sans-serif;font-size:.9rem;font-weight:600;margin-right:8px;vertical-align:3px}
+ul,ol{padding-left:20px;margin:8px 0}
+li{margin:6px 0}
+.timeline{list-style:none;padding:0;margin:0}
+.timeline li{display:grid;grid-template-columns:78px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);margin:0}
+.timeline li:last-child{border-bottom:0}
+.timeline .t{font-weight:600;color:var(--accent);font-size:.9rem}
+.timeline .how{display:block;color:var(--muted);font-size:.85rem}
+.callout{border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.callout.gf{background:var(--gf-bg)}
+.callout.gf strong:first-child{color:var(--gf)}
+.callout.warn{background:var(--warn-bg)}
+.callout.warn strong:first-child{color:var(--warn)}
+.dirs{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.dir{display:flex;align-items:center;gap:10px;text-decoration:none;background:var(--chip);color:var(--ink);border-radius:12px;padding:12px 14px;font-weight:500;font-size:.95rem;min-height:48px}
+.dir::before{content:"";flex:0 0 22px;height:22px;background:var(--accent);-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
+.dir.walk{--icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6a2 2 0 0 0-1.7-1c-.3 0-.5 0-.8.2L6 8.3V13h2V9.6l1.8-.7'/%3E%3C/svg%3E")}
+.dir.transit{--icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 16c0 .9.4 1.7 1 2.2V20a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h8v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1.8c.6-.5 1-1.3 1-2.2V6c0-3.5-3.6-4-8-4S4 2.5 4 6v10zm3.5 1a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm9 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM18 11H6V6h12v5z'/%3E%3C/svg%3E")}
+.dir span{flex:1}
+.dir::after{content:"\203A";font-size:1.4rem;color:var(--muted);line-height:1}
+.eat{list-style:none;padding:0;margin:10px 0}
+.eat li{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.eat .name{font-weight:600}
+.eat .meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{font-size:.75rem;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.tag.safe{background:var(--gf-bg);color:var(--gf)}
+.eat p{margin:4px 0 0;font-size:.93rem}
+.eat .go{display:inline-block;margin-top:8px;font-weight:600;font-size:.9rem;text-decoration:none}
+footer{color:var(--muted);font-size:.85rem;padding:8px 0 40px}
+footer ul{padding-left:18px}
+.top{display:inline-block;margin-top:6px;font-size:.85rem;text-decoration:none;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">A self-guided walking tour</div>
+    <h1>San Francisco in a Day</h1>
+    <p>From the Oakland ferry to the Painted Ladies, with gluten-free picks at every meal.</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Tour stops">
+  <div class="wrap">
+    <a href="#plan">Plan</a>
+    <a href="#ferry">Ferry</a>
+    <a href="#embarcadero">Embarcadero</a>
+    <a href="#wharf">Wharf</a>
+    <a href="#chinatown">Chinatown</a>
+    <a href="#lunch">Lunch</a>
+    <a href="#haight">Haight</a>
+    <a href="#alamo">Alamo Sq</a>
+    <a href="#dinner">Dinner</a>
+    <a href="#tips">Tips</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="plan">
+  <p>This is San Francisco the way it's meant to be met: arriving by water, the way generations of commuters, gold-seekers and dreamers have. In one long, happy day you'll cross the Bay, stroll the waterfront, clang up Russian Hill on a cable car, eat your way through Chinatown and North Beach, and then trade the tourist city for the neighborhoods where San Franciscans actually live. Wear comfortable shoes, bring a layer (or two), and keep your eyes up. This city rewards the curious.</p>
+  <h2>Your day at a glance</h2>
+  <ul class="timeline">
+    <li><span class="t">9:00 am</span><span>Jack London Square ferry<span class="how">Arrive 10–15 min early</span></span></li>
+    <li><span class="t">9:35 am</span><span>Ferry Building<span class="how">25-minute crossing</span></span></li>
+    <li><span class="t">10:30 am</span><span>Embarcadero stroll, Piers 33–39<span class="how">Walk 2 miles, or F-line streetcar</span></span></li>
+    <li><span class="t">11:30 am</span><span>Fisherman's Wharf and Ghirardelli Square<span class="how">Walk</span></span></li>
+    <li><span class="t">12:45 pm</span><span>Cable car to Chinatown<span class="how">Powell–Hyde line</span></span></li>
+    <li><span class="t">1:15 pm</span><span>Lunch and shopping, Chinatown and North Beach<span class="how">Walk</span></span></li>
+    <li><span class="t">3:30 pm</span><span>Haight-Ashbury<span class="how">Muni bus</span></span></li>
+    <li><span class="t">4:45 pm</span><span>The Panhandle to Divisadero<span class="how">Walk, about 1 mile</span></span></li>
+    <li><span class="t">5:30 pm</span><span>Alamo Square and the Painted Ladies<span class="how">Walk</span></span></li>
+    <li><span class="t">6:30 pm</span><span>Dinner in Hayes Valley<span class="how">Walk, 10 minutes</span></span></li>
+  </ul>
+  <div class="callout gf"><strong>The gluten-free game plan:</strong> Every meal stop leads with a 100% gluten-free or celiac-trusted option, with backups. San Francisco's dedicated GF spots are few but good, and this route passes close to several. Check hours the morning of; small restaurants change them often.</div>
+</section>
+
+<section id="ferry">
+  <h2><span class="num">1</span>The ferry: Oakland to the Ferry Building</h2>
+  <p>Start at the Oakland ferry terminal at the foot of Clay Street in Jack London Square, named for the hard-drinking adventure writer who haunted these docks as a teenager. On weekdays, the 9:10 am boat lands at the Ferry Building at 9:35; the 8:40 and 10:05 sailings work too (<a href="https://sanfranciscobayferry.com/oakland-alameda-ferry-route">schedule</a>). Weekend times differ, so check the morning of. Ferries leave on time; arrive 10–15 minutes early and tap your Clipper card or contactless credit card on and off.</p>
+  <p><strong>On the crossing:</strong> Grab a spot on the open back deck (bring that jacket). Leaving the Oakland Estuary, look left at the giant cranes of the Port of Oakland, said to have inspired George Lucas's AT-AT walkers. Out on the Bay, the Bay Bridge sweeps overhead. Ahead, the skyline rises: the Salesforce Tower, the Transamerica Pyramid, and Coit Tower on Telegraph Hill. To the right, Alcatraz sits low in the water, and on a clear day the Golden Gate peeks out beyond it. Take it in: this is the view the city was built to be seen from.</p>
+  <div class="dirs">
+    <a class="dir transit" href="https://www.google.com/maps/dir/?api=1&origin=Oakland+Ferry+Terminal+Jack+London+Square+Oakland+CA&destination=San+Francisco+Ferry+Building&travelmode=transit"><span>Ferry: Jack London Square → Ferry Building</span></a>
+  </div>
+</section>
+
+<section id="embarcadero">
+  <h2><span class="num">2</span>The Ferry Building and the Embarcadero</h2>
+  <p>You step off the boat into the city's front door. Built in 1898 and modeled on the bell tower of Seville's cathedral, the Ferry Building survived both great earthquakes. For decades a freeway hid it from the city; when the 1989 Loma Prieta quake damaged that double-decker eyesore, San Francisco tore it down and got its waterfront back. Today the old baggage hall is a food lover's nave of local producers.</p>
+  <div class="callout gf"><strong>Gluten-free breakfast:</strong> Mariposa Baking Company inside the Ferry Building is 100% gluten free. Your cousin can order a croissant or a breakfast sandwich without a single question. Pastries run about $8. Grab a snack for later; this may be the safest bite of the day.</div>
+  <h3>The walk north (about 2 miles, 45 minutes)</h3>
+  <p>Head left along the Embarcadero with the Bay on your right.</p>
+  <ul>
+    <li><strong>Vintage streetcars:</strong> The F-line rumbles past with restored trolleys from Milan, Melbourne and Philadelphia. Tired feet? Hop one to the Wharf.</li>
+    <li><strong>Levi's Plaza and Telegraph Hill:</strong> Look up left for Coit Tower crowning the hill, home to a flock of wild parrots. Levi's Plaza is also home to Xica, a 100% gluten-free Mexican restaurant worth remembering for another day.</li>
+    <li><strong>Pier 33:</strong> The Alcatraz ferry dock. Even without a ticket, it's a fine spot to eye "The Rock" across the water.</li>
+    <li><strong>Pier 39:</strong> Tacky and touristy, and that's fine. Walk out to the end, then go left to K-Dock, where the California sea lions bark and sunbathe. They moved in after the 1989 earthquake and never left.</li>
+  </ul>
+  <div class="dirs">
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=San+Francisco+Ferry+Building&destination=Pier+39+San+Francisco&waypoints=Levi%27s+Plaza+San+Francisco%7CPier+33+Alcatraz+Landing+San+Francisco&travelmode=walking"><span>Walk the Embarcadero to Pier 39</span></a>
+    <a class="dir transit" href="https://www.google.com/maps/dir/?api=1&origin=San+Francisco+Ferry+Building&destination=Pier+39+San+Francisco&travelmode=transit"><span>Or ride the F-line streetcar</span></a>
+  </div>
+</section>
+
+<section id="wharf">
+  <h2><span class="num">3</span>Fisherman's Wharf and Ghirardelli Square</h2>
+  <p>Fisherman's Wharf is where San Francisco's Italian fishing fleet once unloaded its crab and sardines. The tourist veneer is thick, but the real thing still peeks through if you know where to look.</p>
+  <ul>
+    <li><strong>The working wharf:</strong> Duck behind the restaurants along Jefferson Street to the little lagoon (Fish Alley, off Leavenworth). Small boats still bob here, and the Fishermen's and Seamen's Memorial Chapel quietly honors those lost at sea.</li>
+    <li><strong>Musée Mécanique (Pier 45):</strong> A free-entry arcade of antique coin-operated machines. Drop a quarter in Laffing Sal and watch the whole room jump.</li>
+    <li><strong>Hyde Street Pier:</strong> Part of the San Francisco Maritime National Historical Park, with historic ships including the 1886 square-rigger <em>Balclutha</em>.</li>
+    <li><strong>Aquatic Park:</strong> Watch the hardy swimmers of the century-old Dolphin Club paddle through the frigid Bay.</li>
+  </ul>
+  <p><strong>Ghirardelli Square:</strong> Climb the hill to the old chocolate factory, its red-brick sign glowing over the Bay since the 1920s. Domingo Ghirardelli came for the Gold Rush and found his fortune in cocoa instead.</p>
+  <div class="callout warn"><strong>Celiac note:</strong> Many Ghirardelli chocolates are made without gluten ingredients, but sundae toppings and shared scoops carry real cross-contact risk. Read labels and ask staff, or stick to sealed, labeled squares.</div>
+  <p><strong>Need a snack?</strong> The In-N-Out on Jefferson Street is the city's only one. Order "protein style, with a gluten allergy, sauce packet on the side" to trigger their allergy protocol; the fries use a dedicated fryer. Skip grilled onions.</p>
+  <div class="dirs">
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Pier+39+San+Francisco&destination=Ghirardelli+Square+San+Francisco&waypoints=Musee+Mecanique+Pier+45+San+Francisco%7CHyde+Street+Pier+San+Francisco&travelmode=walking"><span>Walk Pier 39 → Wharf → Ghirardelli</span></a>
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Ghirardelli+Square+San+Francisco&destination=Hyde+St+%26+Beach+St+San+Francisco&travelmode=walking"><span>Ghirardelli → cable car turnaround</span></a>
+  </div>
+</section>
+
+<section id="chinatown">
+  <h2><span class="num">4</span>Cable car to Chinatown and North Beach</h2>
+  <p><strong>The ride:</strong> Board the Powell–Hyde line at its turnaround at Hyde and Beach, right above Ghirardelli Square. This is the most scenic line, cresting Russian Hill with a postcard view down to Alcatraz. Lines can be long; the wait is part of the ritual. A single ride is $9 until January 2027. Stand on the running board if you dare, and hold on as the gripman works the brake.</p>
+  <p>Hop off at Powell and Washington. Half a block west, the free <strong>Cable Car Museum</strong> lets you watch the giant wheels pulling the cables under the streets, still humming since 1873. Then walk east downhill on Washington into Chinatown.</p>
+  <p><strong>Chinatown:</strong> The oldest Chinatown in North America. Enter its heart on Grant Avenue, then slip into the alleys where locals actually live. Peek into Waverly Place with its painted temple balconies, visit Portsmouth Square where elders play cards and Chinese chess, and watch fortunes get folded at the Golden Gate Fortune Cookie Factory on Ross Alley (fortune cookies are wheat, so this one's for looking).</p>
+  <p><strong>North Beach:</strong> Cross Broadway into Little Italy, the Beat Generation's old stomping ground. Browse City Lights Bookstore, where Ferlinghetti published Ginsberg's <em>Howl</em>, step next door into Vesuvio Cafe, sip an espresso at Caffe Trieste, and admire the twin spires of Saints Peter and Paul Church on Washington Square.</p>
+  <div class="dirs">
+    <a class="dir transit" href="https://www.google.com/maps/dir/?api=1&origin=Hyde+St+%26+Beach+St+San+Francisco&destination=Powell+St+%26+Washington+St+San+Francisco&travelmode=transit"><span>Cable car: Hyde &amp; Beach → Powell &amp; Washington</span></a>
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Cable+Car+Museum+San+Francisco&destination=Washington+Square+San+Francisco&waypoints=Waverly+Place+San+Francisco%7CGolden+Gate+Fortune+Cookie+Factory+San+Francisco%7CPortsmouth+Square+San+Francisco%7CCity+Lights+Booksellers+San+Francisco%7CCaffe+Trieste+San+Francisco&travelmode=walking"><span>Walk Chinatown → North Beach</span></a>
+  </div>
+</section>
+
+<section id="lunch">
+  <h2>Gluten-free lunch picks</h2>
+  <ul class="eat">
+    <li>
+      <div class="name">Otherwise Brewing taproom</div>
+      <div class="meta"><span class="tag safe">100% gluten free</span><span class="tag">North Beach</span></div>
+      <p>The Bay Area's only GF brewery, a block from Caffe Trieste. Hot dogs on Mariposa buns and snacks: light lunch, great beer.</p>
+      <a class="go" href="https://www.google.com/maps/dir/?api=1&origin=Washington+Square+San+Francisco&destination=Otherwise+Brewing+North+Beach+San+Francisco&travelmode=walking">Directions ›</a>
+    </li>
+    <li>
+      <div class="name">Caffè Sport, 574 Green St</div>
+      <div class="meta"><span class="tag safe">Celiac friendly</span><span class="tag">North Beach</span></div>
+      <p>Old-world Sicilian dining room with GF pizza and pasta; reviewers say the kitchen takes GF orders seriously.</p>
+      <a class="go" href="https://www.google.com/maps/dir/?api=1&origin=Washington+Square+San+Francisco&destination=Caffe+Sport+574+Green+St+San+Francisco&travelmode=walking">Directions ›</a>
+    </li>
+    <li>
+      <div class="name">China Live, 644 Broadway</div>
+      <div class="meta"><span class="tag">Dedicated GF menu</span><span class="tag">Chinatown edge</span></div>
+      <p>Modern Chinese food hall; celiac diners report knowledgeable servers.</p>
+      <a class="go" href="https://www.google.com/maps/dir/?api=1&origin=Washington+Square+San+Francisco&destination=China+Live+644+Broadway+San+Francisco&travelmode=walking">Directions ›</a>
+    </li>
+  </ul>
+  <p>For a sit-down Italian lunch, Caffè Sport is the pick. For the safest bet, Otherwise Brewing is entirely gluten free, but the food menu is small; pair it with Mariposa leftovers. Most of Chinatown's dim sum and soy-sauce cooking is risky for celiacs, so skip the impulse stops.</p>
+</section>
+
+<section id="haight">
+  <h2><span class="num">5</span>Muni to Haight-Ashbury</h2>
+  <p><strong>Getting there (about 40 minutes):</strong> Walk down Kearny or Grant to Market Street (15 minutes), or ride the T Third subway from Chinatown–Rose Pak station to Union Square/Market Street. On Market, catch the <strong>7 Haight-Noriega</strong> outbound to Haight and Masonic. Confirm the route in a maps app the day of, since Muni lines shift.</p>
+  <div class="dirs">
+    <a class="dir transit" href="https://www.google.com/maps/dir/?api=1&origin=Washington+Square+San+Francisco&destination=Haight+St+%26+Masonic+Ave+San+Francisco&travelmode=transit"><span>Muni: North Beach → Haight &amp; Masonic</span></a>
+  </div>
+  <p style="margin-top:16px"><strong>The walk:</strong> In 1967's Summer of Love, roughly 100,000 young people poured into these Victorian streets, and the Haight became the capital of the counterculture. The flowers have faded, but the vibe lingers in tie-dye shops and murals.</p>
+  <ol>
+    <li><strong>Haight and Ashbury:</strong> The famous street sign. Note the clock above the corner shop, said to be stuck at 4:20.</li>
+    <li><strong>710 Ashbury:</strong> Half a block south, the Grateful Dead's communal home in the late 1960s. Admire from the sidewalk; people live here.</li>
+    <li><strong>Amoeba Music (1855 Haight):</strong> A former bowling alley turned one of the world's great record stores.</li>
+    <li><strong>Shopping on Haight Street:</strong> Vintage clothing, head shops, and the giant fishnet legs kicking out of the Piedmont Boutique window.</li>
+    <li><strong>Buena Vista Park:</strong> For a quick climb, this hilltop park offers a forested view over the city.</li>
+  </ol>
+  <p>When you're ready, walk east on Haight to Masonic, then north two blocks (past Page) to the Panhandle at Oak Street.</p>
+  <div class="dirs">
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Haight+St+%26+Ashbury+St+San+Francisco&destination=Masonic+Ave+%26+Oak+St+San+Francisco&waypoints=710+Ashbury+St+San+Francisco%7CAmoeba+Music+1855+Haight+St+San+Francisco%7CPiedmont+Boutique+1452+Haight+St+San+Francisco&travelmode=walking"><span>Walk the Haight → Panhandle</span></a>
+  </div>
+</section>
+
+<section id="alamo">
+  <h2><span class="num">6</span>The Panhandle, Divisadero and Alamo Square</h2>
+  <p><strong>The Panhandle (about 0.8 mile, 20 minutes):</strong> This skinny strip of green between Oak and Fell is the "handle" of Golden Gate Park's frying pan. Planted in the 1870s, its eucalyptus and cypress are among the oldest trees in the park system. After the 1906 earthquake, thousands of refugees camped here; in the 1960s, the Grateful Dead and Jefferson Airplane played free concerts on this grass. Stroll east past joggers, dog walkers and grand Victorians.</p>
+  <p><strong>Divisadero:</strong> At the end of the Panhandle (Baker Street), continue two blocks east to Divisadero, the old "dividing line" street and now one of the city's liveliest food corridors, often called NoPa (North of the Panhandle).</p>
+  <div class="callout gf"><strong>Gluten-free aperitivo:</strong> Walk three blocks south on Divisadero to Haight, then east to Pierce Street to Stoa at 701 Haight. This cocktail bar has a 100% gluten-free (and dairy-free) kitchen. Try the chalupa or savory mochi. It opens in the evening, so check hours; it may make the perfect dinner.</div>
+  <p><strong>Alamo Square:</strong> From Divisadero, walk east on Hayes Street two blocks uphill to the park (from Stoa, it's three blocks north on Pierce). On its east side along Steiner Street stand the <strong>Painted Ladies</strong>, the row of 1890s Queen Anne Victorians backed by the downtown skyline, famous from the opening of <em>Full House</em>. Climb to the top of the park, pull up a patch of grass, and watch the late-afternoon light warm the city.</p>
+  <div class="dirs">
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Masonic+Ave+%26+Oak+St+San+Francisco&destination=Painted+Ladies+Steiner+St+San+Francisco&waypoints=Divisadero+St+%26+Fell+St+San+Francisco%7CStoa+701+Haight+St+San+Francisco&travelmode=walking"><span>Panhandle → Stoa → Painted Ladies</span></a>
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Masonic+Ave+%26+Oak+St+San+Francisco&destination=Painted+Ladies+Steiner+St+San+Francisco&waypoints=Divisadero+St+%26+Fell+St+San+Francisco&travelmode=walking"><span>Skip Stoa: straight to Alamo Square</span></a>
+  </div>
+</section>
+
+<section id="dinner">
+  <h2><span class="num">7</span>Dinner in Hayes Valley</h2>
+  <p>From the Painted Ladies, walk east on Hayes Street about 10 minutes downhill into Hayes Valley. When the earthquake-damaged Central Freeway came down in the early 2000s, this neighborhood blossomed. Patricia's Green, a park built on the old freeway footprint, anchors a few blocks of boutiques, wine bars and design shops. A fitting finale: San Francisco reinventing itself, again.</p>
+  <div class="callout warn"><strong>The honest gluten-free truth:</strong> Hayes Valley's dedicated GF restaurant, Little Gem, has closed. The options that remain are accommodating, not dedicated, so say "celiac" (not just "gluten free") and ask about shared fryers and pasta water.</div>
+  <ul class="eat">
+    <li>
+      <div class="name">Stoa, 701 Haight St</div>
+      <div class="meta"><span class="tag safe">100% gluten free</span><span class="tag">Lower Haight</span></div>
+      <p>Near Alamo Square. The safest dinner on the route: small plates and great cocktails, pricey.</p>
+      <a class="go" href="https://www.google.com/maps/dir/?api=1&origin=Painted+Ladies+Steiner+St+San+Francisco&destination=Stoa+701+Haight+St+San+Francisco&travelmode=walking">Directions ›</a>
+    </li>
+    <li>
+      <div class="name">Il Borgo, 500 Fell St</div>
+      <div class="meta"><span class="tag">Accommodating</span><span class="tag">Dedicated GF fryer</span></div>
+      <p>Cozy candlelit Italian with GF pasta always on hand and fair prices for the city. Best Hayes Valley bet.</p>
+      <a class="go" href="https://www.google.com/maps/dir/?api=1&origin=Painted+Ladies+Steiner+St+San+Francisco&destination=Il+Borgo+500+Fell+St+San+Francisco&travelmode=walking">Directions ›</a>
+    </li>
+    <li>
+      <div class="name">Patxi's Pizza, 511 Hayes St</div>
+      <div class="meta"><span class="tag">GF crust</span><span class="tag">Shared kitchen</span></div>
+      <p>Chicago-style deep dish; reviewers rave about the GF crust. Ask about prep.</p>
+      <a class="go" href="https://www.google.com/maps/dir/?api=1&origin=Painted+Ladies+Steiner+St+San+Francisco&destination=Patxi%27s+Pizza+511+Hayes+St+San+Francisco&travelmode=walking">Directions ›</a>
+    </li>
+  </ul>
+  <p><strong>Our pick:</strong> For a truly worry-free dinner, eat at Stoa before or after Alamo Square, then stroll into Hayes Valley for a nightcap and window shopping. For dinner in Hayes Valley itself, Il Borgo is the most careful option.</p>
+  <p><strong>Getting home:</strong> Walk to Van Ness or Civic Center and ride BART to Lake Merritt or 12th St Oakland, or take Muni down Market to the Ferry Building. On weekdays the last ferry to Oakland leaves late evening; check the schedule before dinner.</p>
+  <div class="dirs">
+    <a class="dir walk" href="https://www.google.com/maps/dir/?api=1&origin=Painted+Ladies+Steiner+St+San+Francisco&destination=Patricia%27s+Green+San+Francisco&travelmode=walking"><span>Painted Ladies → Patricia's Green</span></a>
+    <a class="dir transit" href="https://www.google.com/maps/dir/?api=1&origin=Patricia%27s+Green+San+Francisco&destination=Jack+London+Square+Oakland+CA&travelmode=transit"><span>Home: Hayes Valley → Jack London Square</span></a>
+    <a class="dir transit" href="https://www.google.com/maps/dir/?api=1&origin=Patricia%27s+Green+San+Francisco&destination=San+Francisco+Ferry+Building&travelmode=transit"><span>Hayes Valley → Ferry Building</span></a>
+  </div>
+</section>
+
+<section id="tips">
+  <h2>Practical tips</h2>
+  <ul>
+    <li><strong>Pay as you go:</strong> Clipper or a contactless credit card works on the ferry, Muni and BART. Tap on and off the ferry. Muni's adult fare is about $3; cable cars are $9 per ride (rising to $12 in January 2027).</li>
+    <li><strong>Dress in layers:</strong> Fog on the Bay, sun in the Haight, wind at Alamo Square, sometimes all within an hour.</li>
+    <li><strong>Mind the hills:</strong> The route is about 5–6 miles of walking. The F-line and the cable car save your legs on the steepest stretches.</li>
+    <li><strong>Celiac dining:</strong> Say "celiac" or "allergy" to trigger real kitchen protocols. Ask about shared fryers, pasta water and toasters. Carry a backup snack from Mariposa.</li>
+    <li><strong>Watch your stuff:</strong> Keep bags zipped on crowded cable cars and at the Wharf, and never leave anything visible in a parked car.</li>
+    <li><strong>Pace yourself:</strong> If the day runs long, the Haight is the easiest stop to trim.</li>
+  </ul>
+</section>
+
+<footer>
+  <p><strong>Sources</strong></p>
+  <ul>
+    <li><a href="https://sanfranciscobayferry.com/oakland-alameda-ferry-route">SF Bay Ferry: Oakland &amp; Alameda schedule</a></li>
+    <li><a href="https://www.sfmta.com/blog/sfmta-board-directors-approves-new-budget">SFMTA: fare changes</a></li>
+    <li><a href="https://wheatlesswanderlust.com/gluten-free-san-francisco/">Wheatless Wanderlust: Gluten Free San Francisco</a></li>
+    <li><a href="https://atly.com/best/gluten-free/vegan-united-states-california-san-francisco-north-beach">Atly: Gluten-free in North Beach</a></li>
+    <li><a href="https://atly.com/best/gluten-free/united-states-california-san-francisco-hayes-valley">Atly: Gluten-free in Hayes Valley</a></li>
+    <li><a href="https://atly.com/best/gluten-free/dinner-united-states-california-san-francisco-lower-haight">Atly: Gluten-free in Lower Haight</a></li>
+  </ul>
+  <p>Hours, fares and menus change. Check before you go.</p>
+  <a class="top" href="#plan">↑ Back to top</a>
+</footer>
+
+</main>
+</body>
+</html>
