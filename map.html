@@ -30,6 +30,7 @@ body{display:flex;flex-direction:column;background:var(--bg);color:var(--ink);fo
 .bar a{color:#fff;font-weight:600;font-size:.9rem;text-decoration:none;white-space:nowrap}
 body.embed .bar{display:none}
 #map{flex:1;min-height:0;background:var(--chip)}
+@media (prefers-color-scheme: dark){ .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)} }
 .panel{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 2px 10px rgba(0,0,0,.12);font:13px/1.4 Inter,system-ui,sans-serif}
 .legend summary{font-weight:600;cursor:pointer;list-style:none}
 .legend summary::-webkit-details-marker{display:none}
@@ -164,9 +165,9 @@ const FOOD = [
 ];
 
 const map = L.map('map', {zoomControl:true, scrollWheelZoom:!embed, tap:true});
-L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'rastertiles/voyager'}/{z}/{x}/{y}{r}.png`, {
-  maxZoom:19, subdomains:'abcd',
-  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19,
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 const gmaps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q + ', San Francisco');
